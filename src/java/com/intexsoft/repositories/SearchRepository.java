@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class SearchRepository implements ISearchRepository {
     private final IFileRepository fileRepository = new FileRepository();
-    private final File dir = new File("C:\\\\Users\\\\admin\\\\Desktop\\\\Intexsoft\\\\Java Library Service\\\\src\\\\resource\\\\libraries");
+    private final File dir = new File("C:\\Users\\admin\\Desktop\\Intexsoft\\Java Library Service\\src\\resource\\libraries");
     private final List<List<String>> allBooks = fileRepository.getAllFiles(dir);
 
     @Override
@@ -45,7 +45,6 @@ public class SearchRepository implements ISearchRepository {
         String name = bookInput.getName() == null ? "" : bookInput.getName().toLowerCase();
         boolean checkAuthor = false;
         boolean checkName = false;
-
         for(List<String> books: allBooks){
             if(!author.isEmpty()) checkAuthor = books.get(1).toLowerCase().contains(author);
             if(!name.isEmpty()) checkName = books.get(2).toLowerCase().contains(name);

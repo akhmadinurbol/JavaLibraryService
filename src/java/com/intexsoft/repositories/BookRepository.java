@@ -10,13 +10,16 @@ import java.util.*;
 public class BookRepository implements IBookRepository {
     private final Scanner scanner = new Scanner(System.in);
     private final ISearchRepository searchRepository = new SearchRepository();
-    private final IOutputRepository outputRepository = new OutputRepository();
 
     @Override
-    public List<Book> findBooks(Book bookInput){
-        List<Book> allBooks = new ArrayList<>(searchRepository.findAll(bookInput));
-        outputRepository.outputAll(allBooks);
-        return allBooks;
+    public void findBooks(Book bookInput){
+        for(Book book: searchRepository.findAll(bookInput)){
+            if(book.getDateOfIssue().isEmpty() && book.getSubscriber().isEmpty()){
+                System.out.println("FOUND id: " + book.getId() + ", library: " + book.getLibraryName() + "");
+            } else if(!book.getDateOfIssue().isEmpty() && !book.getDateOfIssue().isEmpty()){
+                System.out.println("FOUNDMISSING id: " + book.getId() + ", library: " + book.getLibraryName() + ", date of issue: " + book.getDateOfIssue() + ".");
+            }
+        }
     }
 
     @Override
@@ -50,11 +53,11 @@ public class BookRepository implements IBookRepository {
 
         for (Book book : findById(input)) {
             if(book.getId() == Integer.parseInt(params.get("id"))){
-                if(book.getDateOfIssue() == null && book.getSubscriber() == null){
+                if(book.getDateOfIssue().isEmpty() && book.getSubscriber().isEmpty()){
                     book.setSubscriber(params.get("subscriber"));
                     book.setDateOfIssue(dateFormat.format(date));
                     System.out.println("OK Subscriber name:" + book.getSubscriber() +", Date of issue: " + book.getDateOfIssue() + ".");
-                } else if(book.getDateOfIssue() != null && book.getSubscriber() != null){
+                } else if(!book.getDateOfIssue().isEmpty() && !book.getSubscriber().isEmpty()){
                     System.out.println("RESERVED Subscriber name:" + book.getName() +", Date of issue: " + book.getDateOfIssue() + ".");
                 }
             }
