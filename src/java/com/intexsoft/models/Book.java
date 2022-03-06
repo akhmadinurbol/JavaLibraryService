@@ -7,8 +7,13 @@ public class Book {
     private String dateOfIssue;
     private String subscriber;
     private String libraryName;
+    private String filePath;
 
     public Book() {
+    }
+
+    public Book(int id) {
+        this.id = id;
     }
 
     public Book(String author, String name) {
@@ -76,5 +81,13 @@ public class Book {
 
     public void setLibraryName(String libraryName) {
         this.libraryName = libraryName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }
