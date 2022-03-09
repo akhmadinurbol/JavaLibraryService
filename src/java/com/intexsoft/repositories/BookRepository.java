@@ -144,22 +144,64 @@ public class BookRepository implements IBookRepository {
             PrintWriter pw = new PrintWriter(out);
 
             Scanner x = new Scanner(new File(filePath));
-            x.useDelimiter(",");
+            x.useDelimiter("[,\n]");
+
+            id = x.next();
 
             while (x.hasNext()) {
-                id = x.next();
                 author = x.next();
                 name = x.next();
-                if (x.next() == null) {
-                    dateOfIssue = x.next();
-                    issuedTo = x.next();
-                }
+                int i = Integer.parseInt(id) + 1;
+                String check = x.next();
+
                 if (id.equals(String.valueOf(book.getId()))) {
-                    pw.print(id + "," + author + "," + name + "," + dateFormat.format(date) + "," + book.getSubscriber());
+                    if (!check.equals(String.valueOf(i))) {
+                        x.next();
+                        pw.print(id + "," + author + "," + name + "," + dateFormat.format(date) + "," + book.getSubscriber());
+                        if (x.hasNext()) {
+                            id = x.next();
+                            pw.print("\n");
+                        }
+                    } else {
+                        id = check;
+                    }
                 } else {
-                    pw.print(id + "," + author + "," + name + "," + dateOfIssue + "," + issuedTo);
+                    if (!check.equals(String.valueOf(i))) {
+                        dateOfIssue = check;
+                        if (x.hasNext()){
+                            issuedTo = x.next();
+                        }
+                        pw.print(id + "," + author + "," + name + "," + dateOfIssue + "," + issuedTo);
+                        if (x.hasNext()){
+                            id = x.next();
+                            pw.print("\n");
+                        }
+                    } else {
+                        id = check;
+                    }
                 }
             }
+
+//            while (x.hasNext()) {
+//                id = x.next();
+//                author = x.next();
+//                name = x.next();
+//                if (x.next() == null) {
+//                    dateOfIssue = x.next();
+//                    issuedTo = x.next();
+//                }
+//                if (id.equals(String.valueOf(book.getId()))) {
+//                    pw.print(id + "," + author + "," + name + "," + dateFormat.format(date) + "," + book.getSubscriber());
+//                    if(x.hasNext()){
+//                        pw.print("\n");
+//                    }
+//                } else {
+//                    pw.print(id + "," + author + "," + name + "," + dateOfIssue + "," + issuedTo);
+//                    if(x.hasNext()){
+//                        pw.print("\n");
+//                    }
+//                }
+//            }
 
             pw.flush();
             pw.close();
