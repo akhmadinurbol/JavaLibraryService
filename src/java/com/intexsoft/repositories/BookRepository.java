@@ -131,9 +131,9 @@ public class BookRepository implements IBookRepository {
         Date date = new Date();
 
         try {
-            String id = "";
-            String author = "";
-            String name = "";
+            String id;
+            String author;
+            String name;
             String dateOfIssue = "";
             String issuedTo = "";
 
@@ -177,9 +177,9 @@ public class BookRepository implements IBookRepository {
 
     private void returnBook(Book book, String filePath) {
         try {
-            String id = "";
-            String author = "";
-            String name = "";
+            String id;
+            String author;
+            String name;
             String dateOfIssue = "";
             String issuedTo = "";
 

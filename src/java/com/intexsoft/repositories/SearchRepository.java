@@ -86,7 +86,7 @@ public class SearchRepository implements ISearchRepository {
                     } else {
                         if(file.getName().contains(".csv")){
                             List<String> values;
-                            String line = "";
+                            String line;
                             String splitBy = ",";
                             try {
                                 BufferedReader br = new BufferedReader(new FileReader(file.getPath()));
