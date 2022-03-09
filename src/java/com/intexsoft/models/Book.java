@@ -26,15 +26,6 @@ public class Book {
         this.subscriber = subscriber;
     }
 
-    public Book(int id, String author, String name, String dateOfIssue, String subscriber, String libraryName) {
-        this.id = id;
-        this.author = author;
-        this.name = name;
-        this.dateOfIssue = dateOfIssue;
-        this.subscriber = subscriber;
-        this.libraryName = libraryName;
-    }
-
     public int getId() {
         return id;
     }

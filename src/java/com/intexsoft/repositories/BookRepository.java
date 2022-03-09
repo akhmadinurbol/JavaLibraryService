@@ -45,15 +45,19 @@ public class BookRepository implements IBookRepository {
                 params.put(splitParams[0], splitParams[1]);
             }
 
-            if(!params.containsKey("id") || !params.containsKey("subscriber")) System.out.println("Please enter correctly keys id & subscriber!");
-        } else System.out.println("Please enter name or author of book!");
+            if(!params.containsKey("id") || !params.containsKey("subscriber")){
+                System.out.println("Please enter correctly keys id & subscriber!");
+                return;
+            }
+        } else {
+            System.out.println("Please enter name or author of book!");
+            return;
+        }
 
         Book input = new Book(Integer.parseInt(params.get("id")),params.get("subscriber"));
 
         List<Book> foundByIdBooks = searchRepository.findById(input);
-        if(foundByIdBooks.isEmpty()){
-            System.out.println("NOTFOUND");
-        } else {
+        if(!foundByIdBooks.isEmpty()){
             for (Book book : foundByIdBooks) {
                 if(book.getId() == Integer.parseInt(params.get("id"))){
                     if(book.getDateOfIssue().isEmpty() && book.getSubscriber().isEmpty()){
@@ -71,6 +75,8 @@ public class BookRepository implements IBookRepository {
                     }
                 }
             }
+        } else {
+            System.out.println("NOTFOUND");
         }
     }
 
@@ -86,29 +92,37 @@ public class BookRepository implements IBookRepository {
             splitParams = sc[1].split("=");
             params.put(splitParams[0], splitParams[1]);
 
-            if(!params.containsKey("id")) System.out.println("Please enter correctly id!");
-        } else System.out.println("Please enter id of book!");
+            if(!params.containsKey("id")) {
+                System.out.println("Please enter correctly key id!");
+                return;
+            }
+        } else {
+            System.out.println("Please enter id of book!");
+            return;
+        }
 
         Book input = new Book(Integer.parseInt(params.get("id")));
 
         List<Book> foundByIdBooks = searchRepository.findById(input);
-        if(foundByIdBooks.isEmpty()){
-            System.out.println("NOTFOUND");
-        } else {
+        if(!foundByIdBooks.isEmpty()){
             for (Book book : foundByIdBooks) {
                 if(book.getId() == Integer.parseInt(params.get("id"))){
                     if(book.getDateOfIssue().equals("") && book.getSubscriber().equals("")){
                         System.out.println("ALREADYRETURNED");
                     } else {
                         System.out.println("OK subscriber: " + book.getSubscriber());
-
                         book.setSubscriber("");
                         book.setDateOfIssue("");
 
                         returnBook(book, book.getFilePath());
                     }
-                } else System.out.println("Please enter correct id!");
+                } else {
+                    System.out.println("Please enter correct id!");
+                    return;
+                }
             }
+        } else {
+            System.out.println("NOTFOUND");
         }
     }
 
@@ -123,7 +137,7 @@ public class BookRepository implements IBookRepository {
             String dateOfIssue = "";
             String issuedTo = "";
 
-            File temp = File.createTempFile("TempFile", ".txt", new File("C:\\Users\\admin\\Desktop\\Intexsoft\\Java Library Service\\src\\java\\com\\intexsoft"));
+            File temp = File.createTempFile("TempFile", ".temp", new File("C:\\Users\\admin\\Desktop\\Intexsoft\\Java Library Service\\src\\java\\com\\intexsoft\\temp"));
             temp.deleteOnExit();
 
             BufferedWriter out = new BufferedWriter(new FileWriter(temp));
@@ -140,7 +154,7 @@ public class BookRepository implements IBookRepository {
                     dateOfIssue = x.next();
                     issuedTo = x.next();
                 }
-                if (Integer.parseInt(id) == book.getId()) {
+                if (id.equals(String.valueOf(book.getId()))) {
                     pw.print(id + "," + author + "," + name + "," + dateFormat.format(date) + "," + book.getSubscriber());
                 } else {
                     pw.print(id + "," + author + "," + name + "," + dateOfIssue + "," + issuedTo);
@@ -169,28 +183,49 @@ public class BookRepository implements IBookRepository {
             String dateOfIssue = "";
             String issuedTo = "";
 
-            File temp = File.createTempFile("TempFile", ".txt", new File("C:\\Users\\admin\\Desktop\\Intexsoft\\Java Library Service\\src\\java\\com\\intexsoft"));
+            File temp = File.createTempFile("TempFile", ".temp", new File("C:\\Users\\admin\\Desktop\\Intexsoft\\Java Library Service\\src\\java\\com\\intexsoft\\temp"));
             temp.deleteOnExit();
 
             BufferedWriter out = new BufferedWriter(new FileWriter(temp));
             PrintWriter pw = new PrintWriter(out);
 
             Scanner x = new Scanner(new File(filePath));
-            x.useDelimiter(",");
+            x.useDelimiter("[,\n]");
+
+            id = x.next();
 
             while (x.hasNext()) {
-                id = x.next();
                 author = x.next();
                 name = x.next();
-                if (x.next() == null) {
-                    dateOfIssue = x.next();
-                    issuedTo = x.next();
+                int i = Integer.parseInt(id) + 1;
+                String check = x.next();
+
+                if (id.equals(String.valueOf(book.getId()))) {
+                    if (!check.equals(String.valueOf(i))) {
+                        x.next();
+                        pw.print(id + "," + author + "," + name + ",,");
+                        if (x.hasNext()) {
+                            id = x.next();
+                            pw.print("\n");
+                        }
+                    } else {
+                        id = check;
+                    }
+                } else {
+                    if (!check.equals(String.valueOf(i))) {
+                        dateOfIssue = check;
+                        if (x.hasNext()){
+                            issuedTo = x.next();
+                        }
+                        pw.print(id + "," + author + "," + name + "," + dateOfIssue + "," + issuedTo);
+                        if (x.hasNext()){
+                            id = x.next();
+                            pw.print("\n");
+                        }
+                    } else {
+                        id = check;
+                    }
                 }
-                if (Integer.parseInt(id) == book.getId()) {
-                    dateOfIssue = "";
-                    issuedTo = "";
-                }
-                pw.print(id + "," + author + "," + name + "," + dateOfIssue + "," + issuedTo + "");
             }
 
             pw.flush();
