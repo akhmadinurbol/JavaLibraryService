@@ -67,7 +67,7 @@ public class BookRepository implements IBookRepository {
                         book.setSubscriber(params.get("subscriber"));
                         book.setDateOfIssue(dateFormat.format(date));
 
-                        orderBook(book, book.getFilePath());
+                        bookService(book, book.getFilePath(), "order");
 
                         System.out.println("OK Subscriber name:" + book.getSubscriber() +", Date of issue: " + book.getDateOfIssue());
                     } else if(!book.getDateOfIssue().isEmpty() && !book.getSubscriber().isEmpty()){
@@ -114,7 +114,7 @@ public class BookRepository implements IBookRepository {
                         book.setSubscriber("");
                         book.setDateOfIssue("");
 
-                        returnBook(book, book.getFilePath());
+                        bookService(book, book.getFilePath(), "return");
                     }
                 } else {
                     System.out.println("Please enter correct id!");
@@ -126,7 +126,7 @@ public class BookRepository implements IBookRepository {
         }
     }
 
-    private void orderBook(Book book, String filePath) {
+    private void bookService(Book book, String filePath, String category) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
         Date date = new Date();
 
@@ -156,99 +156,20 @@ public class BookRepository implements IBookRepository {
 
                 if (id.equals(String.valueOf(book.getId()))) {
                     if (!check.equals(String.valueOf(i))) {
-                        x.next();
-                        pw.print(id + "," + author + "," + name + "," + dateFormat.format(date) + "," + book.getSubscriber());
-                        if (x.hasNext()) {
-                            id = x.next();
-                            pw.print("\n");
-                        }
-                    } else {
-                        id = check;
-                    }
-                } else {
-                    if (!check.equals(String.valueOf(i))) {
-                        dateOfIssue = check;
-                        if (x.hasNext()){
-                            issuedTo = x.next();
-                        }
-                        pw.print(id + "," + author + "," + name + "," + dateOfIssue + "," + issuedTo);
-                        if (x.hasNext()){
-                            id = x.next();
-                            pw.print("\n");
-                        }
-                    } else {
-                        id = check;
-                    }
-                }
-            }
-
-//            while (x.hasNext()) {
-//                id = x.next();
-//                author = x.next();
-//                name = x.next();
-//                if (x.next() == null) {
-//                    dateOfIssue = x.next();
-//                    issuedTo = x.next();
-//                }
-//                if (id.equals(String.valueOf(book.getId()))) {
-//                    pw.print(id + "," + author + "," + name + "," + dateFormat.format(date) + "," + book.getSubscriber());
-//                    if(x.hasNext()){
-//                        pw.print("\n");
-//                    }
-//                } else {
-//                    pw.print(id + "," + author + "," + name + "," + dateOfIssue + "," + issuedTo);
-//                    if(x.hasNext()){
-//                        pw.print("\n");
-//                    }
-//                }
-//            }
-
-            pw.flush();
-            pw.close();
-            out.close();
-
-            File orig = new File(filePath);
-
-            FileChannel src = new FileInputStream(temp).getChannel();
-            FileChannel dest = new FileOutputStream(orig).getChannel();
-            dest.transferFrom(src, 0, src.size());
-        } catch (IOException e) {
-            System.out.println("Error!");
-        }
-    }
-
-    private void returnBook(Book book, String filePath) {
-        try {
-            String id;
-            String author;
-            String name;
-            String dateOfIssue = "";
-            String issuedTo = "";
-
-            File temp = File.createTempFile("TempFile", ".temp", new File("C:\\Users\\admin\\Desktop\\Intexsoft\\Java Library Service\\src\\java\\com\\intexsoft\\temp"));
-            temp.deleteOnExit();
-
-            BufferedWriter out = new BufferedWriter(new FileWriter(temp));
-            PrintWriter pw = new PrintWriter(out);
-
-            Scanner x = new Scanner(new File(filePath));
-            x.useDelimiter("[,\n]");
-
-            id = x.next();
-
-            while (x.hasNext()) {
-                author = x.next();
-                name = x.next();
-                int i = Integer.parseInt(id) + 1;
-                String check = x.next();
-
-                if (id.equals(String.valueOf(book.getId()))) {
-                    if (!check.equals(String.valueOf(i))) {
-                        x.next();
-                        pw.print(id + "," + author + "," + name + ",,");
-                        if (x.hasNext()) {
-                            id = x.next();
-                            pw.print("\n");
+                        if(category.equals("order")){
+                            x.next();
+                            pw.print(id + "," + author + "," + name + "," + dateFormat.format(date) + "," + book.getSubscriber());
+                            if (x.hasNext()) {
+                                id = x.next();
+                                pw.print("\n");
+                            }
+                        } else if(category.equals("return")){
+                            x.next();
+                            pw.print(id + "," + author + "," + name + ",,");
+                            if (x.hasNext()) {
+                                id = x.next();
+                                pw.print("\n");
+                            }
                         }
                     } else {
                         id = check;
