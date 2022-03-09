@@ -131,10 +131,31 @@ public class BookRepository implements IBookRepository {
         Date date = new Date();
 
         try {
+            // Service for .properties file
+            if(filePath.contains(".properties")){
+                FileInputStream in = new FileInputStream(filePath);
+                Properties prop = new Properties();
+                prop.load(in);
+                in.close();
+
+                FileOutputStream out = new FileOutputStream(filePath);
+                if(category.equals("order")){
+                    prop.setProperty("Issued",dateFormat.format(date));
+                    prop.setProperty("IssuedTo",book.getSubscriber());
+                } else if(category.equals("return")){
+                    prop.setProperty("Issued","");
+                    prop.setProperty("IssuedTo","");
+                }
+                prop.store(out, null);
+                out.close();
+                return;
+            }
+
+            // Service for .csv file
             String id;
             String author;
             String name;
-            String dateOfIssue = "";
+            String dateOfIssue;
             String issuedTo = "";
 
             File temp = File.createTempFile("TempFile", ".temp", new File("C:\\Users\\admin\\Desktop\\Intexsoft\\Java Library Service\\src\\java\\com\\intexsoft\\temp"));
