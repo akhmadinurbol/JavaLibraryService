@@ -1,6 +1,5 @@
 package com.intexsoft;
 
-import com.intexsoft.repositories.BookRepository;
 import com.intexsoft.service.BookService;
 
 public class Main {

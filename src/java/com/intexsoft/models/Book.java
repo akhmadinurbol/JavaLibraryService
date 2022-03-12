@@ -9,23 +9,6 @@ public class Book {
     private String libraryName;
     private String filePath;
 
-    public Book() {
-    }
-
-    public Book(int id) {
-        this.id = id;
-    }
-
-    public Book(String author, String name) {
-        this.author = author;
-        this.name = name;
-    }
-
-    public Book(int id, String subscriber) {
-        this.id = id;
-        this.subscriber = subscriber;
-    }
-
     public int getId() {
         return id;
     }
