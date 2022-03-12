@@ -2,8 +2,9 @@ package com.intexsoft.repositories.interfaces;
 
 import com.intexsoft.models.Book;
 
+import java.util.List;
+
 public interface IBookRepository {
-    void findBooks(Book book);
-    void orderBooks();
-    void returnBooks();
+    List<Book> findById(int id);
+    List<Book> findAll(String author, String name);
 }
